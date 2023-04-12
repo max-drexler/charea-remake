@@ -1,0 +1,11 @@
+#! /bin/bash
+
+# Executable file to run the charea remake
+
+# find the path to executable
+SOURCE="${BASH_SOURCE[0]:-$0}" 
+while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done # resolve symlinks
+BASE="$( cd -P "$( dirname "$SOURCE" )" && pwd )" 
+
+
+exec "python" "$BASE"/charea.py "$@"
