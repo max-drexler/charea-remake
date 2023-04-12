@@ -1,0 +1,24 @@
+#! /bin/bash
+
+# Uses assert.sh for bash script testing
+# credit to: torokmark @ https://github.com/torokmark/assert.sh
+
+# shellcheck source=assert.sh
+source './assert.sh'
+
+ONE_BAND_OLD="$(./old_charea files/single_band.area)"
+ONE_BAND_NEW="$(../charea files/single_band.area)"
+
+assert_eq "$ONE_BAND_NEW" "$ONE_BAND_OLD" "Normal one band names are not equal!"
+
+GREG_OLD="$(./old_charea -g files/single_band.area)"
+GREG_NEW="$(../charea -g files/single_band.area)"
+
+assert_eq "$GREG_OLD" "$GREG_NEW" "One band gregorian names are not equal!"
+
+MONTH_OLD="$(./old_charea -m files/single_band.area)"
+MONTH_NEW="$(../charea -m files/single_band.area)"
+
+assert_eq "$MONTH_OLD" "$MONTH_NEW" "One band month names are not equal!"
+
+echo -e "\033[0;32m All tests passed!\033[0m"
