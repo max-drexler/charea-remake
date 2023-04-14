@@ -106,7 +106,7 @@ def get_bands(num_bands: int, band_map1: int, band_map2: int) -> str:
     The index+1 of any 1 in the 32 bits represents a present band.
     e.x. 32bit field = '10100000000000000000000000000000' -> band 1 and 3
 
-    If there is more than 32 bands present, band_map2 is also used.
+    If there are more than 32 bands present, band_map2 is also used.
     """
     def bands_from_int(b_int: int, offset: int):
         # turns integer into a binary string

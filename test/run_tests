@@ -12,23 +12,32 @@ BASE="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 # shellcheck source=assert.sh
 source "$BASE"/assert.sh
 
-
 OLD_CHAR="$BASE/old_charea"
 NEW_CHAR="$BASE/../charea"
 
-ONE_BAND_OLD="$($OLD_CHAR files/single_band.area)"
-ONE_BAND_NEW="$($NEW_CHAR files/single_band.area)"
+# $1 = filepath
+run_test_on_file () {
+    echo -e "\033[0;33mrunning test on $1\033[0m"
+    old_output="$($OLD_CHAR "$1")"
+    new_output="$($NEW_CHAR "$1")"
+    assert_eq "$old_output" "$new_output" "File names don't match for file '$1'!"
+    
+    old_output="$($OLD_CHAR -g "$1")"
+    new_output="$($NEW_CHAR -g "$1")"
+    assert_eq "$old_output" "$new_output" "File names don't match for file '$1' w/ -g!"
+    
+    old_output="$($OLD_CHAR -m "$1")"
+    new_output="$($NEW_CHAR -m "$1")"
+    assert_eq "$old_output" "$new_output" "File names don't match for file '$1' w/ -m!"
+    
+    old_output="$($OLD_CHAR -mg "$1")"
+    new_output="$($NEW_CHAR -mg "$1")"
+    assert_eq "$old_output" "$new_output" "File names don't match for file '$1' w/ -mg!"
+}
 
-assert_eq "$ONE_BAND_NEW" "$ONE_BAND_OLD" "Normal one band names are not equal!"
+for file in "$BASE"/files/*;
+do
+    run_test_on_file "$file"
+done
 
-GREG_OLD="$($OLD_CHAR -g files/single_band.area)"
-GREG_NEW="$($NEW_CHAR -g files/single_band.area)"
-
-assert_eq "$GREG_OLD" "$GREG_NEW" "One band gregorian names are not equal!"
-
-MONTH_OLD="$($OLD_CHAR -m files/single_band.area)"
-MONTH_NEW="$($NEW_CHAR -m files/single_band.area)"
-
-assert_eq "$MONTH_OLD" "$MONTH_NEW" "One band month names are not equal!"
-
-echo -e "\033[0;32m All tests passed!\033[0m"
+echo -e "\033[0;32mAll tests passed!\033[0m"
