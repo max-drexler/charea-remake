@@ -12,7 +12,7 @@ BASE="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 # shellcheck source=assert.sh
 source "$BASE"/assert.sh
 
-OLD_CHAR="$BASE/old_charea"
+OLD_CHAR="$BASE/../lib/old_charea"
 NEW_CHAR="$BASE/../charea"
 
 # $1 = filepath
