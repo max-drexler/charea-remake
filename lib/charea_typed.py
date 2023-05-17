@@ -1,5 +1,8 @@
+#! /usr/bin/python3
 """
 An almost 1-to-1 python remake of charea.c
+
+This file has type annotations on the functions so it requires python3
 
 area file parsing is based on McIDAS documentation:
 https://www.ssec.wisc.edu/mcidas/doc/prog_man/current/formats-1.html#13797
