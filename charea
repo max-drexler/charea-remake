@@ -108,9 +108,9 @@ def get_bands(num_bands, band_map1, band_map2):
 
     If there are more than 32 bands present, band_map2 is also used.
     """
-    def bands_from_int(b_int: int, offset: int):
+    def bands_from_int(b_int, offset):
         # turns integer into a binary string
-        bit_field = f'{b_int:032b}'[::-1]
+        bit_field = "{:032b}".format(b_int)[::-1]
         for i, ch in enumerate(bit_field):
             if ch == '1':
                 yield str(i+offset)
@@ -157,26 +157,26 @@ def main(argc, argv):
     satellite = SENSORS[dir_block[2]]
 
     # construct file's name
-    name = f'{satellite}_'
+    name = '{}_'.format(satellite)
 
     if print_month:
-        name += f"{date.strftime('%b').lower()}_"
+        name += "{}_".format(date.strftime('%b').lower())
 
     if 'sndr' not in satellite:
         # add band number(s)
-        name += f"{get_bands(dir_block[13], dir_block[18], dir_block[19])}_"
+        name += "{}_".format(get_bands(dir_block[13], dir_block[18], dir_block[19]))
 
     # add year
-    name += f"{date.strftime('%Y')}_"
+    name += "{}_".format(date.strftime('%Y'))
 
     # add julian or gregorian date
     if print_greg:
-        name += f"{date.strftime('%m_%d')}_"
+        name += "{}_".format(date.strftime('%m_%d'))
     else:
-        name += f"{date.strftime('%j')}_"
+        name += "{}_".format(date.strftime('%j'))
 
     # add time
-    name += f"{date.strftime('%H%M')}"
+    name += "{}".format(date.strftime('%H%M'))
 
     print(name)
 
