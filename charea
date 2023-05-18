@@ -94,7 +94,7 @@ DEFAULT_SENSORS = [ # Mapping between satellite number and satellite name, used 
 def parse_date(yyyddd):
     """Gets the year and day of year from an area file.
     
-    *Note, are file's dates are yyyddd where yyy = yyyy % 1900.
+    *Note, area file's dates are yyyddd where yyy = yyyy % 1900.
 
     Args:
         yyyddd (int): integer representation of date
@@ -110,9 +110,9 @@ def get_bands(num_bands, band_map1, band_map2):
     """Gets the bands from an area file.
 
     Getting bands from an area file is a multi-step process.
-    band_map1 and 2 are integer conversions of 32bit fields of the area file,
-    those 32bit fields are the key to getting all bands from the area file.
+    band_map1 and 2 are integer representations of 32bit fields in the area file.
     The index+1 of any 1 in the 32 bits represents a present band.
+
     e.x. 32bit field = '10100000000000000000000000000000' -> band 1 and 3
 
     If there are more than 32 bands present, band_map2 is also used.
@@ -150,7 +150,7 @@ def get_satellite(sat_num):
     except IOError:
         return DEFAULT_SENSORS[sat_num]
 
-    # Following layout of SATANNOT found here:
+    # Parsing based on layout of SATANNOT found here:
     # https://www.ssec.wisc.edu/mcidas/doc/prog_man/2015/formats-27.html
     for i in range(0, len(data), 80):
         entry = data[i: i + 80]
@@ -165,7 +165,6 @@ def get_satellite(sat_num):
 
 
 def main(argc, argv):
-
     parser = argparse.ArgumentParser()
     parser.add_argument('file', help='an area file')
     parser.add_argument('-m', action='store_true', help='print month name')
@@ -179,16 +178,12 @@ def main(argc, argv):
     # Store area file directory block as an array of integers
     dir_block = array.array('i')
 
-    area_file = None
     try:
-        area_file = open(area_file_path, 'rb')
-        dir_block.fromfile(area_file, 64)
-    except OSError:
+        with open(area_file_path, 'rb') as area_file:
+            dir_block.fromfile(area_file, 64)
+    except IOError:
         print("\nusage:charea [-mg] AREA0001\n")
         return 1
-    finally:
-        if area_file is not None:
-            area_file.close()
 
     # see if bits are flipped
     if dir_block[1] != 4:
@@ -198,7 +193,6 @@ def main(argc, argv):
     year, doy = parse_date(dir_block[3])
     time = str(dir_block[4]).rjust(6, '0')
     date = datetime.strptime(''.join((year, doy, time)), '%Y%j%H%M%S')
-    
     satellite = get_satellite(dir_block[2]) # Original code only uses hard-coded value
 
     # construct file's name
